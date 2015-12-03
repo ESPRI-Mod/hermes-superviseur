@@ -34,7 +34,11 @@ def _get_data(job_uid):
         job = db.dao_monitoring.retrieve_job(job_uid)
         if job is None:
             raise ValueError("Job does not exist in database")
+
         simulation = db.dao_monitoring.retrieve_simulation(job.simulation_uid)
+        if simulation is None:
+            raise ValueError("Simulation does not exist in database")
+
         return simulation, job
     finally:
         db.session.end()
