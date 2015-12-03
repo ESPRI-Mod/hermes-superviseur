@@ -44,7 +44,7 @@ def _write_script(script, job):
     """Writes script to file system.
 
     """
-    fname = "superviseur-script-{}.sh".format(job.job_uid)
+    fname = "run-formatter-{}.sh".format(job.job_uid)
     fpath = os.path.join(_OUT_DIR, fname)
     with open(fpath, 'wb') as output_file:
         output_file.write(script)
