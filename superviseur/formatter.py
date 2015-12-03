@@ -14,15 +14,15 @@
 
 
 class FormatParameters(object):
-	"""Data required by the formatter.
+    """Input data required by the formatter.
 
-	"""
-	def __init__(self, simulation, job):
-		"""Instance constructor.
+    """
+    def __init__(self, simulation, job):
+        """Instance constructor.
 
-		"""
-    self.simulation = simulation
-    self.job = job
+        """
+        self.simulation = simulation
+        self.job = job
 
 
 class FormatException(Exception):
@@ -55,4 +55,4 @@ def format_script(params):
 	:rtype: unicode
 
 	"""
-	return u"BASH CODE"
+	return u"BASH CODE TO GO HERE"

@@ -14,14 +14,14 @@
 
 
 class DispatchParameters(object):
-	"""Data required by the dispatcher.
+    """Data required by the dispatcher.
 
-	"""
-	def __init__(self):
-		"""Instance constructor.
+    """
+    def __init__(self):
+        """Instance constructor.
 
-		"""
-		pass
+        """
+        pass
 
 
 class DispatchException(Exception):
