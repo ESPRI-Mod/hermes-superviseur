@@ -76,7 +76,7 @@ def _main(args):
     try:
         uuid.UUID(args.job_uid)
     except ValueError:
-        raise ValueError("Job idnetifier is invalid")
+        raise ValueError("Job identifier is invalid")
 
     # Load data from database.
     simulation, job = _get_data(args.job_uid)
