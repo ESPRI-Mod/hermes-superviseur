@@ -17,11 +17,12 @@ class FormatParameters(object):
 	"""Data required by the formatter.
 
 	"""
-	def __init__(self):
+	def __init__(self, simulation, job):
 		"""Instance constructor.
 
 		"""
-		pass
+    self.simulation = simulation
+    self.job = job
 
 
 class FormatException(Exception):
@@ -43,7 +44,6 @@ class FormatException(Exception):
 
         """
         return u"PRODIGUER-SUPERVISEUR FORMATTER EXCEPTION : {}".format(self.message)
-
 
 
 def format_script(params):
