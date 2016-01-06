@@ -1,0 +1,12 @@
+#!/bin/ksh
+
+#**************************************************************
+# Author: Lola Falletti
+# Contact: lola.falletti_at_idris.fr
+# Date: {timestamp} $ Date of script generation
+# IPSL ({year})
+#  This software is governed by the CeCILL licence see libIGCM/libIGCM_CeCILL.LIC
+#
+#**************************************************************
+#
+# ...
