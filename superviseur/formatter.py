@@ -25,6 +25,7 @@ _loaded_templates = dict()
 
 def _load_templates():
     """Loads script templates from file system.
+
     """
     if _loaded_templates: 
     	return
