@@ -11,8 +11,9 @@
 
 
 """
-import os
+import datetime
 import glob
+import os
 
 
 
@@ -20,23 +21,40 @@ import glob
 _TEMPLATE_FOLDER = os.path.join(os.path.dirname(__file__), 'templates')
 
 # Set of loaded templates.
-_loaded_templates = dict()
+_templates = dict()
 
 
 def _load_templates():
     """Loads script templates from file system.
 
     """
-    if _loaded_templates: 
-    	return
 
     for fpath in glob.glob(os.path.join(_TEMPLATE_FOLDER, '*.txt')):
-    	filename = os.path.basename(fpath)
-    	with open(fpath) as f:
-    		_loaded_templates[filename] = f.read()
+        filename = os.path.basename(fpath)
+        with open(fpath) as f:
+            _templates[filename] = f.read()
 
-_load_templates()
-print len(_loaded_templates)
+
+def _get_template(params):
+    """Get the template file and replace the generic fields.
+
+    """
+    if not _templates:
+        _load_templates()
+
+    if params.job.is_error:
+        template = _templates['fail.txt']
+    elif params.job.execution_end_date is None:
+        template = _templates['late.txt']
+    else:
+        raise ValueError("Template not found")
+    
+    template = template.replace('{timestamp}', unicode(params.now))
+    template = template.replace('{year}', unicode(params.now.year))
+    template = template.replace('{submission_path}', params.job.submission_path)
+
+    return template
+
 
 
 class FormatParameters(object):
@@ -49,6 +67,7 @@ class FormatParameters(object):
         """
         self.simulation = simulation
         self.job = job
+        self.now = datetime.datetime.now()
         #self.supervision = supervision
 
 
@@ -74,29 +93,32 @@ class FormatException(Exception):
 
 
 def format_script(params):
-	"""Returns supervision script to be executed at an HPC.
+    """Returns supervision script to be executed at an HPC.
 
-	:param FormatParameters params: Data required by the formatter.
+    :param FormatParameters params: Data required by the formatter.
 
-	:returns: A formatted script.
-	:rtype: unicode
+    :returns: A formatted script.
+    :rtype: unicode
 
-	"""
-	model = params.simulation.model_raw
-	space = params.simulation.space_raw
-	experiment = params.simulation.experiment_raw
-	job_name = params.simulation.name
+    """
+    model = params.simulation.model_raw
+    space = params.simulation.space_raw
+    experiment = params.simulation.experiment_raw
+    job_name = params.simulation.name
 
-	pp_name = params.job.post_processing_name
-	if params.job.execution_end_date is None :
-		print "JOB LATE"
-	else :
-		print params.job.post_processing_name
-	#print "\n *** SIMULATION ***"
-	#print params.simulation
-	#print "\n *** JOB ***"
-	#print params.job
-	submit_text = \
+    pp_name = params.job.post_processing_name
+    if params.job.execution_end_date is None :
+        print "JOB LATE"
+    else :
+        print params.job.post_processing_name
+    #print "\n *** SIMULATION ***"
+    #print params.simulation
+    #print "\n *** JOB ***"
+    #print params.job
+    
+    my_template = _get_template(params)
+    print my_template
+    submit_text = \
   u"#!/bin/bash \n\
 \n\
 fichier=$WORKDIR'/IGCM_OUT/%s/%s/%s/%s/Out/' \n\
@@ -111,5 +133,5 @@ if [[ -f $fichier && -s $fichier ]]; then\n\
 else\n\
   echo '$fichier does not exist or is empty'\n\
 fi\n" %(model, space, experiment, job_name)
-	#return u"BASH CODE TO GO HERE"
-	return submit_text
+    #return u"BASH CODE TO GO HERE"
+    return my_template

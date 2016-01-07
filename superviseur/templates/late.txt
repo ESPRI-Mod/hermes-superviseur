@@ -12,3 +12,6 @@
 # Format script for a late job
 #
 #**************************************************************
+
+
+declare SUBMISSION_PATH = {submission_path}
