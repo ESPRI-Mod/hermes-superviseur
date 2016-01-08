@@ -1,0 +1,25 @@
+#------------------------------------------------------------------
+# BEGIN : COMPUTING JOB
+# Code to be executed when a computing job fails
+#------------------------------------------------------------------
+
+
+cd $SUBMISSION_PATH
+check_line_execution
+
+echo "y" > cm_answer.txt
+check_line_execution
+
+../../../libIGCM/clean_month.job < cm_answer.txt
+check_line_execution
+
+rm -f cm_answer.txt
+check_line_execution
+
+$HPC_SUBMISSION_CMD $JOB_NAME
+check_line_execution
+
+
+#------------------------------------------------------------------
+# END : COMPUTING JOB
+#------------------------------------------------------------------

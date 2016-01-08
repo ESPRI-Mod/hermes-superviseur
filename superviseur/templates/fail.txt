@@ -5,11 +5,21 @@
 # Contact: lola.falletti_at_idris.fr
 # Date: {timestamp} $ Date of script generation
 # IPSL ({year})
-#  This software is governed by the CeCILL licence see libIGCM/libIGCM_CeCILL.LIC
+# This software is governed by the CeCILL licence see libIGCM/libIGCM_CeCILL.LIC
 #
 #**************************************************************
 #
 # ...
 
 
+declare JOB_NAME = {job_name}
+declare HPC_SUBMISSION_CMD = {hpc_submission_cmd}
 declare SUBMISSION_PATH = {submission_path}
+
+function check_line_execution {
+	if [ $? != 0 ]; then
+		echo 'TODO : mail au superviseur'
+	fi
+}
+
+

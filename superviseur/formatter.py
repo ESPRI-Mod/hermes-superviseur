@@ -35,6 +35,16 @@ def _load_templates():
             _templates[filename] = f.read()
 
 
+def _hpc_submission(params):
+    """Get the HPC machine name and return the corresponding submission job command.
+
+    """
+    if params.simulation.compute_node_raw == u"IDRIS":
+        return "llsubmit"
+    if params.simulation.compute_node_raw == u"TGCC": #or "CCRT" ?
+        return "ccc_msub"
+
+
 def _get_template(params):
     """Get the template file and replace the generic fields.
 
@@ -44,13 +54,17 @@ def _get_template(params):
 
     if params.job.is_error:
         template = _templates['fail.txt']
+        if params.job.typeof == "computing":
+            template += _templates['computing.txt']
     elif params.job.execution_end_date is None:
         template = _templates['late.txt']
     else:
         raise ValueError("Template not found")
-    
+
     template = template.replace('{timestamp}', unicode(params.now))
     template = template.replace('{year}', unicode(params.now.year))
+    template = template.replace('{job_name}', "Job_"+params.simulation.name)
+    template = template.replace('{hpc_submission_cmd}', _hpc_submission(params))
     template = template.replace('{submission_path}', params.job.submission_path)
 
     return template
@@ -101,37 +115,17 @@ def format_script(params):
     :rtype: unicode
 
     """
-    model = params.simulation.model_raw
-    space = params.simulation.space_raw
-    experiment = params.simulation.experiment_raw
-    job_name = params.simulation.name
+    #model = params.simulation.model_raw
+    #space = params.simulation.space_raw
+    #experiment = params.simulation.experiment_raw
+    #job_name = params.simulation.name
 
-    pp_name = params.job.post_processing_name
-    if params.job.execution_end_date is None :
-        print "JOB LATE"
-    else :
-        print params.job.post_processing_name
-    #print "\n *** SIMULATION ***"
-    #print params.simulation
-    #print "\n *** JOB ***"
-    #print params.job
+    #pp_name = params.job.post_processing_name
+    #if params.job.execution_end_date is None :
+    #    print "JOB LATE"
+    #else :
+    #    print params.job.post_processing_name
     
     my_template = _get_template(params)
     print my_template
-    submit_text = \
-  u"#!/bin/bash \n\
-\n\
-fichier=$WORKDIR'/IGCM_OUT/%s/%s/%s/%s/Out/' \n\
-\n\
-if [[ -f $fichier && -s $fichier ]]; then\n\
-  echo '$fichier exists and is not empty'\n\
-  if grep -c ERROR $fichier; then\n\
-    echo 'Errors in the file'\n\
-  else\n\
-    echo 'No error in the file'\n\
-  fi\n\
-else\n\
-  echo '$fichier does not exist or is empty'\n\
-fi\n" %(model, space, experiment, job_name)
-    #return u"BASH CODE TO GO HERE"
     return my_template

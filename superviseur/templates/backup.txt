@@ -1,0 +1,15 @@
+   submit_text = \
+  u"#!/bin/bash \n\
+\n\
+fichier=$WORKDIR'/IGCM_OUT/%s/%s/%s/%s/Out/' \n\
+\n\
+if [[ -f $fichier && -s $fichier ]]; then\n\
+  echo '$fichier exists and is not empty'\n\
+  if grep -c ERROR $fichier; then\n\
+    echo 'Errors in the file'\n\
+  else\n\
+    echo 'No error in the file'\n\
+  fi\n\
+else\n\
+  echo '$fichier does not exist or is empty'\n\
+fi\n" %(model, space, experiment, job_name)
