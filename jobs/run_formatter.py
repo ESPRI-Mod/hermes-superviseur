@@ -29,8 +29,7 @@ def _get_data(job_uid):
     """Returns required data from database.
 
     """
-    db.session.start()
-    try:
+    with db.session.create():
         job = db.dao_monitoring.retrieve_job(job_uid)
         if job is None:
             raise ValueError("Job does not exist in database")
@@ -38,14 +37,12 @@ def _get_data(job_uid):
         simulation = db.dao_monitoring.retrieve_simulation(job.simulation_uid)
         if simulation is None:
             raise ValueError("Simulation does not exist in database")
-        
+
         #supervision = db.dao_superviseur.retrieve_supervision(1)
         #if supervision is None:
         #    raise ValueError("Supervision does not exist in database")
 
         return simulation, job#, supervision
-    finally:
-        db.session.end()
 
 
 def _write_script(script, job):
