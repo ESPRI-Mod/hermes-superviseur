@@ -17,39 +17,19 @@ class DispatchParameters(object):
     """Data required by the dispatcher.
 
     """
-    def __init__(self):
+    def __init__(self, simulation, job, supervision):
         """Instance constructor.
 
         """
-        pass
+        self.simulation = simulation
+        self.job = job
+        self.supervision = supervision
 
 
-class DispatchException(Exception):
-    """Dispatcher exception wrapper.
-
-    """
-
-    def __init__(self, msg):
-        """Contructor.
-
-        :param str msg: Exception message.
-
-        """
-        self.message = unicode(msg)
-
-
-    def __str__(self):
-        """Returns a string representation.
-
-        """
-        return u"PRODIGUER-SUPERVISEUR DISPATCHER EXCEPTION : {}".format(self.message)
-
-
-
-def dispatch_script(ctx):
+def dispatch_script(params):
 	"""Dispatches supervision script to HPC for execution.
 
-	:param DispatchParameters ctx: Data required to dispatch script to HPC.
+	:param DispatchParameters params: Data required to dispatch script to HPC.
 
 	"""
 	pass
