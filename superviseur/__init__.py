@@ -14,7 +14,5 @@
 
 from superviseur.formatter import format_script
 from superviseur.formatter import FormatParameters
-from superviseur.formatter import FormatException
 from superviseur.dispatcher import dispatch_script
 from superviseur.dispatcher import DispatchParameters
-from superviseur.dispatcher import DispatchException

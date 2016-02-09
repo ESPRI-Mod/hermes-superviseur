@@ -42,7 +42,7 @@ def _get_data(job_uid):
         #if supervision is None:
         #    raise ValueError("Supervision does not exist in database")
 
-        return simulation, job#, supervision
+        return simulation, job, None
 
 
 def _write_script(script, job):
@@ -56,16 +56,17 @@ def _write_script(script, job):
     logger.log("Superviseur script written to --> {}".format(fpath))
 
 
-def _execute_formatter(simulation, job):
+def _execute_formatter(simulation, job, supervision):
     """Executes the superviseur formatter function.
 
     """
-    formatter_params = superviseur.FormatParameters(simulation, job)
+    params = superviseur.FormatParameters(simulation, job, supervision)
     try:
-        script = superviseur.format_script(formatter_params)
-    except superviseur.DispatchException as err:
+        script = superviseur.format_script(params)
+    except Exception as err:
         logger.log_error(err)
     else:
+        print script
         _write_script(script, job)
 
 
@@ -80,10 +81,10 @@ def _main(args):
         raise ValueError("Job identifier is invalid")
 
     # Load data from database.
-    simulation, job = _get_data(args.job_uid)
+    simulation, job, supervision = _get_data(args.job_uid)
 
     # Dispatch script to HPC for execution.
-    _execute_formatter(simulation, job)
+    _execute_formatter(simulation, job, supervision)
 
 
 

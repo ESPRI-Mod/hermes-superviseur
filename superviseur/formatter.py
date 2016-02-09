@@ -61,49 +61,21 @@ def _get_template(params):
     else:
         raise ValueError("Template not found")
 
-    template = template.replace('{timestamp}', unicode(params.now))
-    template = template.replace('{year}', unicode(params.now.year))
-    template = template.replace('{job_name}', "Job_"+params.simulation.name)
-    template = template.replace('{hpc_submission_cmd}', _hpc_submission(params))
-    template = template.replace('{submission_path}', params.job.submission_path)
-
     return template
-
 
 
 class FormatParameters(object):
     """Input data required by the formatter.
 
     """
-    def __init__(self, simulation, job):
+    def __init__(self, simulation, job, supervision):
         """Instance constructor.
 
         """
         self.simulation = simulation
         self.job = job
         self.now = datetime.datetime.now()
-        #self.supervision = supervision
-
-
-class FormatException(Exception):
-    """Formatter exception wrapper.
-
-    """
-
-    def __init__(self, msg):
-        """Contructor.
-
-        :param str msg: Exception message.
-
-        """
-        self.message = unicode(msg)
-
-
-    def __str__(self):
-        """Returns a string representation.
-
-        """
-        return u"PRODIGUER-SUPERVISEUR FORMATTER EXCEPTION : {}".format(self.message)
+        self.supervision = supervision
 
 
 def format_script(params):
@@ -115,17 +87,11 @@ def format_script(params):
     :rtype: unicode
 
     """
-    #model = params.simulation.model_raw
-    #space = params.simulation.space_raw
-    #experiment = params.simulation.experiment_raw
-    #job_name = params.simulation.name
+    script = _get_template(params)
+    script = script.replace('{timestamp}', unicode(params.now))
+    script = script.replace('{year}', unicode(params.now.year))
+    script = script.replace('{job_name}', "Job_{}".format(params.simulation.name))
+    script = script.replace('{hpc_submission_cmd}', _hpc_submission(params))
+    script = script.replace('{submission_path}', params.job.submission_path or u"UNKNOWN")
 
-    #pp_name = params.job.post_processing_name
-    #if params.job.execution_end_date is None :
-    #    print "JOB LATE"
-    #else :
-    #    print params.job.post_processing_name
-    
-    my_template = _get_template(params)
-    print my_template
-    return my_template
+    return script
