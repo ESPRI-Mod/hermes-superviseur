@@ -58,6 +58,8 @@ def _get_template(params):
             template += _templates['computing.txt']
     elif params.job.execution_end_date is None:
         template = _templates['late.txt']
+        if params.job.typeof == "computing":
+            template += _templates['computing.txt']
     else:
         raise ValueError("Template not found")
 
@@ -93,5 +95,7 @@ def format_script(params):
     script = script.replace('{job_name}', "Job_{}".format(params.simulation.name))
     script = script.replace('{hpc_submission_cmd}', _hpc_submission(params))
     script = script.replace('{submission_path}', params.job.submission_path or u"UNKNOWN")
+    if params.job.execution_end_date is None:
+    	script = script.replace('{hpc_job_id}', params.job.scheduler_id)
 
     return script

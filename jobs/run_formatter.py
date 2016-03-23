@@ -66,7 +66,7 @@ def _execute_formatter(simulation, job, supervision):
     except Exception as err:
         logger.log_error(err)
     else:
-        print script
+        #print script
         _write_script(script, job)
 
 

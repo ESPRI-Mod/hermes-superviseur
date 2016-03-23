@@ -12,9 +12,9 @@
 # ...
 
 
-declare JOB_NAME = {job_name}
-declare HPC_SUBMISSION_CMD = {hpc_submission_cmd}
-declare SUBMISSION_PATH = {submission_path}
+declare HPC_SUBMISSION_CMD="{hpc_submission_cmd}"
+declare JOB_NAME="{job_name}"
+declare SUBMISSION_PATH="{submission_path}"
 
 function check_line_execution {
 	if [ $? != 0 ]; then
