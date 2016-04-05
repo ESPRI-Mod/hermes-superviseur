@@ -7,7 +7,7 @@
 cd $SUBMISSION_PATH
 check_line_execution
 
-echo "y" > cm_answer.txt
+echo -e "y\ny\ny" > cm_answer.txt
 check_line_execution
 
 ../../../libIGCM/clean_month.job < cm_answer.txt
