@@ -70,7 +70,7 @@ class FormatParameters(object):
     """Input data required by the formatter.
 
     """
-    def __init__(self, simulation, job, supervision):
+    def __init__(self, simulation, job, supervision, user):
         """Instance constructor.
 
         """
@@ -78,6 +78,7 @@ class FormatParameters(object):
         self.job = job
         self.now = datetime.datetime.now()
         self.supervision = supervision
+        self.user = user
 
 
 def format_script(params):

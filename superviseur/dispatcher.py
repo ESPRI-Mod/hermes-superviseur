@@ -17,19 +17,20 @@ class DispatchParameters(object):
     """Data required by the dispatcher.
 
     """
-    def __init__(self, simulation, job, supervision):
+    def __init__(self, simulation, job, supervision, user):
         """Instance constructor.
 
         """
         self.simulation = simulation
         self.job = job
         self.supervision = supervision
+        self.user = user
 
 
 def dispatch_script(params):
-	"""Dispatches supervision script to HPC for execution.
+    """Dispatches supervision script to HPC for execution.
 
-	:param DispatchParameters params: Data required to dispatch script to HPC.
+    :param DispatchParameters params: Data required to dispatch script to HPC.
 
-	"""
-	pass
+    """
+    pass

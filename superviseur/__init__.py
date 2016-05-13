@@ -16,3 +16,4 @@ from superviseur.formatter import format_script
 from superviseur.formatter import FormatParameters
 from superviseur.dispatcher import dispatch_script
 from superviseur.dispatcher import DispatchParameters
+from superviseur.security import authorize
