@@ -94,10 +94,10 @@ def _dispatch_email(params):
     print body
 
     # Send email.
-    # mail.send_email(config.alerts.emailAddressFrom,
-    #                params.user.email,
-    #                subject,
-    #                body)
+    mail.send_email(config.alerts.emailAddressFrom,
+                    params.user.email,
+                    subject,
+                    body)
 
 
 
