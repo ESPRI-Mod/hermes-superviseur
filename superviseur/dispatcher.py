@@ -62,10 +62,10 @@ def _dispatch_email(params):
         body.format("Job late")
 
     # Send email.
-    #mail.send_email(config.alerts.emailAddressFrom,
-                    params.user.email,
-                    subject,
-                    body)
+    # mail.send_email(config.alerts.emailAddressFrom,
+    #                 params.user.email,
+    #                 subject,
+    #                 body)
 
 
 
