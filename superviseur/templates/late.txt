@@ -17,21 +17,22 @@
 declare HPC_JOB_ID="{hpc_job_id}"
 declare HPC_SUBMISSION_CMD="{hpc_submission_cmd}"
 declare JOB_NAME="{job_name}"
+declare RETRIEVE_JOB_STATUS=`{retrieve_job_status}`
 declare SUBMISSION_PATH="{submission_path}"
+
 
 function check_line_execution {
 	if [ $? != 0 ]; then
-		echo 'TODO : mail au superviseur'
+		echo 'TODO'
 	fi
 }
 
 
-declare JOB_STATUS=`llq -j $HPC_JOB_ID -f %st | sed -n 3p`
-
-if [ -z "$JOB_STATUS" ]; then 
+if [ -z "$CKECK_JOB_STATUS" ]; then 
 	echo 'The job is not running so we continue the supervision'
 	continue
 else
+	echo $JOB_STATUS
 	echo 'TODO'
 	return 1
 fi

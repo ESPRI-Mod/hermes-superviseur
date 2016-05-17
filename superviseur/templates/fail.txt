@@ -16,9 +16,10 @@ declare HPC_SUBMISSION_CMD="{hpc_submission_cmd}"
 declare JOB_NAME="{job_name}"
 declare SUBMISSION_PATH="{submission_path}"
 
+
 function check_line_execution {
 	if [ $? != 0 ]; then
-		echo 'TODO : mail au superviseur'
+		echo 'TODO'
 	fi
 }
 

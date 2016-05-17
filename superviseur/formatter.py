@@ -17,6 +17,12 @@ import os
 
 
 
+# 
+_HPC_JOB_STATUS_COMMAND = {
+    "IDRIS": "llq -j $HPC_JOB_ID -f %st | sed -n 3p",
+    "TGCC": "UNKNOWN"
+}
+
 # Templates folder.
 _TEMPLATE_FOLDER = os.path.join(os.path.dirname(__file__), 'templates')
 
@@ -98,5 +104,6 @@ def format_script(params):
     script = script.replace('{submission_path}', params.job.submission_path or u"UNKNOWN")
     if params.job.execution_end_date is None:
     	script = script.replace('{hpc_job_id}', params.job.scheduler_id)
-
+        script = script.replace('{retrieve_job_status}', _HPC_JOB_STATUS_COMMAND[params.simulation.compute_node_raw])
+    
     return script

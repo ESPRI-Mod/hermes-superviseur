@@ -29,7 +29,7 @@ Something went wrong with your job number {} on {} machine.
 
 To fix it, please find in attachment a bash script generated automatically by the Hermes supervision platform. 
 You have to copy it in your $HOME and then do :
-source script.ksh
+source {}
 
 Regards,
 
@@ -100,7 +100,7 @@ def _get_email_attachment_name(params):
     """Returns the name of the email attachment to be sent to the user.
 
     """
-    return "supervision-{}.ksh".format(params.job_status)
+    return "supervision-{}-{}-{}-{}.txt".format(params.job_status, params.user.login, params.job.scheduler_id, params.simulation.compute_node_machine_raw)
 
 
 def _get_email_subject(params):
@@ -121,7 +121,8 @@ def _get_email_body(params):
         params.user.login,
         params.job.scheduler_id,
         params.simulation.compute_node_machine_raw,
-        JobSpecificText(params.job_status)
+        JobSpecificText(params.job_status),
+        _get_email_attachment_name(params)
         )
 
 
