@@ -13,7 +13,7 @@
 """
 from prodiguer.utils import config
 from prodiguer.utils import mail
-from prodiguer.utils import logger
+from superviseur import constants
 
 
 
@@ -129,15 +129,6 @@ def _dispatch_email(params):
     """Dispatches an email to the user for the supervision of his jobs.
 
     """
-    # Set job status
-    if params.job.is_error:
-        params.job_status = u'compute-job-fail'
-    elif params.job.execution_end_date is None:
-        params.job_status = u'compute-job-late'
-    else:
-        raise ValueError(_ERR_JOB_STATE)
-
-    # Send email.
     mail.send_email(config.alerts.emailAddressFrom,
                     params.user.email,
                     _get_email_subject(params),
@@ -158,7 +149,12 @@ class DispatchParameters(object):
         self.job = job
         self.supervision = supervision
         self.user = user
-        self.job_status = None
+        if job.is_error:
+            self.job_status = u'compute-job-fail'
+        elif job.execution_end_date is None:
+            self.job_status = u'compute-job-late'
+        else:
+            raise ValueError(_ERR_JOB_STATE)
 
 
 def dispatch_script(params):
@@ -167,5 +163,5 @@ def dispatch_script(params):
     :param DispatchParameters params: Data required to dispatch script to HPC.
 
     """
-    if params.user.supervisionLevel == 1:
+    if params.user.supervisionLevel == constants.SUPERVISION_LEVEL_1:
         _dispatch_email(params)
