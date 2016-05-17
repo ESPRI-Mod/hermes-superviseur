@@ -53,7 +53,7 @@ def _execute_dispatcher(simulation, job, supervision, user):
     """
     params = superviseur.DispatchParameters(simulation, job, supervision, user)
     try:
-        script = superviseur.dispatch_script(params)
+        superviseur.dispatch_script(params)
     except Exception as err:
         logger.log_error(err)
     
