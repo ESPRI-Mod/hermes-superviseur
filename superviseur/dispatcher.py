@@ -100,7 +100,7 @@ def _get_email_attachment_name(params):
     """Returns the name of the email attachment to be sent to the user.
 
     """
-    return "supervision-{}.sh".format(params.job_status)
+    return "supervision-{}.ksh".format(params.job_status)
 
 
 def _get_email_subject(params):
