@@ -1,3 +1,3 @@
 ===================================
-Prodiguer Supervisor - Configuration
+HERMES Supervisor - Configuration
 ===================================

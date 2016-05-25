@@ -1,5 +1,5 @@
 ===================================
-Prodiguer Supervisor - Credits
+HERMES Supervisor - Credits
 ===================================
 
 Developer/Author

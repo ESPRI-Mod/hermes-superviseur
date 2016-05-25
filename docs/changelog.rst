@@ -1,4 +1,4 @@
 ===================================
-Prodiguer Supervisor - Change log
+HERMES Supervisor - Change log
 ===================================
 

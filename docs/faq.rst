@@ -1,3 +1,3 @@
 ===================================
-Prodiguer Supervisor - FAQ
+HERMES Supervisor - FAQ
 ===================================

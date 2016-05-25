@@ -1,3 +1,3 @@
 ===================================
-Prodiguer Supervisor - Usage
+HERMES Supervisor - Usage
 ===================================

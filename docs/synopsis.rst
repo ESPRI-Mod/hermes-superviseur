@@ -1,3 +1,3 @@
 ===================================
-Prodiguer Supervisor - Synopsis
+HERMES Supervisor - Synopsis
 ===================================

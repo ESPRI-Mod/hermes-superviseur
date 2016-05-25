@@ -1,3 +1,3 @@
 ===================================
-Prodiguer Supervisor - Installation
+HERMES Supervisor - Installation
 ===================================

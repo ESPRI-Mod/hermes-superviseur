@@ -1,5 +1,5 @@
 ===================================
-Prodiguer Supervisor
+HERMES Supervisor
 ===================================
 
 .. toctree::
