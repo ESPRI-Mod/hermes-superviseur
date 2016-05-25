@@ -1,2 +1,2 @@
-# prodiguer-supervisor
-Prodiguer-libIGCM supervision bridge
+# hermes-supervisor
+HERMES-libIGCM supervision bridge
