@@ -34,6 +34,10 @@ def _get_data(job_uid):
         if job is None:
             raise ValueError("Job does not exist in database")
 
+        job_periods = db.dao_monitoring.retrieve_latest_job_periods(job_uid)
+        if not job_periods:
+            raise ValueError("Job period does not exist in database")
+
         simulation = db.dao_monitoring.retrieve_simulation(job.simulation_uid)
         if simulation is None:
             raise ValueError("Simulation does not exist in database")
@@ -46,7 +50,7 @@ def _get_data(job_uid):
         if user is None:
             raise ValueError("User does not exist in database")
 
-        return simulation, job, None, user
+        return simulation, job, job_periods[-1], None, user
 
 
 def _write_script(script, job):
@@ -60,11 +64,17 @@ def _write_script(script, job):
     logger.log("Superviseur script written to --> {}".format(fpath))
 
 
-def _execute_formatter(simulation, job, supervision, user):
+def _execute_formatter(simulation, job, job_period, supervision, user):
     """Executes the superviseur formatter function.
 
     """
-    params = superviseur.FormatParameters(simulation, job, supervision, user)
+    params = superviseur.FormatParameters(
+        simulation,
+        job,
+        job_period,
+        supervision,
+        user
+        )
     try:
         script = superviseur.format_script(params)
     except Exception as err:
@@ -85,10 +95,11 @@ def _main(args):
         raise ValueError("Job identifier is invalid")
 
     # Load data from database.
-    simulation, job, supervision, user = _get_data(args.job_uid)
+    simulation, job, job_period, supervision, user = \
+        _get_data(args.job_uid)
 
     # Dispatch script to HPC for execution.
-    _execute_formatter(simulation, job, supervision, user)
+    _execute_formatter(simulation, job, job_period, supervision, user)
 
 
 
