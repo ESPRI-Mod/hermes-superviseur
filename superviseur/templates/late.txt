@@ -13,33 +13,86 @@
 #
 #**************************************************************
 
-
 declare HPC_JOB_ID="{hpc_job_id}"
+declare HPC_MACHINE="{compute_node_machine}"
 declare HPC_SUBMISSION_CMD="{hpc_submission_cmd}"
 declare JOB_NAME="{job_name}"
-declare RETRIEVE_JOB_STATUS=`{retrieve_job_status}`
+declare JOB_UID="{job_uid}"
+declare LOGIN="{user_login}"
+declare RETRIEVE_JOB_STATUS="{retrieve_job_status}"
+declare SIMULATION_UID="{simulation_uid}"
 declare SUBMISSION_PATH="{submission_path}"
+declare USER_EMAIL="{user_email}"
+
 
 
 function check_line_execution {
-	if [ $? != 0 ]; then
-		echo 'TODO'
-	fi
+    if [ $? != 0 ]; then
+        echo 'TODO'
+    fi
+}
+
+function HERMES_SendMail_JobStatus {
+
+    mailText="Dear Hermes user $1,
+    
+    \n\nThe Hermes supervision platform didn't manage to fix the problem with 
+    your job number $2 on $3 machine.
+    \nThe platform has detected that your job has the status \"$4\". You should have a look. 
+    The submission path of your job is :
+    \n$5
+    
+    \n\nRegards,
+
+    \n\nThe Hermes Supervision Platform"
+
+    mailSubject="HERMES Supervision :: user login $1, job number $2 on $3 machine"
+
+    echo -e $mailText | mail -s "$mailSubject" $6
+
+}
+
+function HERMES_sendAMQP_JobStatus {
+    /* To send the HPC job status to Hermes platform.
+        $1 : simulation_uid
+        $2 : job_uid
+        $3 : retrieve_job_status
+    */
+
+    typeset mail_recipient encodedBody
+    mail_recipient="superviseur@ipsl.jussieu.fr"
+    # Job Status tag on server side
+    code=8001
+    # Usual AMQP message to route messages on server side
+    encodedBody=$( echo "{${1},${2},\"msgCode\":\"${code}\",\"msgUID\":
+                \"$(uuidgen)\",\"jobStatus\":\"${3}\",\"msgTimestamp\":
+                \"$( date +"%Y-%m-%dT%H:%M:%S.%N%z" )\"}" |  base64 -w 0 )
+    # send mail
+    echo ${encodedBody} | mailx -s "[LOLA AMQP CHANNEL]" ${mail_recipient}
+
+    # Allways all good for now.
+    return 0
 }
 
 
+
 if [ -z $RETRIEVE_JOB_STATUS ]; then 
-	echo 'The job is not running so we continue the supervision'
-	continue
+    echo 'The job is not running so we continue the supervision'
+    continue
 elif [ $RETRIEVE_JOB_STATUS == "R" ]; then
-	echo 'The job is still running, we cancel it and we continue the supervision.'
-	llcancel $HPC_JOB_ID
-	continue
+    echo 'The job is still running, we cancel it and we continue the supervision.'
+    llcancel $HPC_JOB_ID
+    continue
 elif [ $RETRIEVE_JOB_STATUS == "H" ]; then
-	echo "The job has the status Hold, let the Computing Center do its work."
-	echo "TODO: new table in the database with the job status?"
+    echo "The job has the status Hold, let the Computing Center do its work."
+    echo "TODO: new table in the database with the job status?"
+    HERMES_sendAMQP_JobStatus $SIMULATION_UID $JOB_UID $RETRIEVE_JOB_STATUS
+    echo "Exit"
+    return 2
 else
-	echo $RETRIEVE_JOB_STATUS
-	echo 'TODO: new table in the database with the job status?'
-	return 1
+    echo $RETRIEVE_JOB_STATUS
+    echo 'TODO: new table in the database with the job status?'
+    echo 'Mail to the user.'
+    IGCM_sys_SendMail $LOGIN $HPC_JOB_ID $HPC_MACHINE $RETRIEVE_JOB_STATUS $SUBMISSION_PATH $USER_EMAIL
+    return 3
 fi

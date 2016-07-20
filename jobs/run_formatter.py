@@ -4,7 +4,7 @@ import argparse
 import os
 import uuid
 
-import prodiguer
+import hermes
 import superviseur
 from prodiguer.db import pgres as db
 from prodiguer.utils import logger

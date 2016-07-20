@@ -9,12 +9,10 @@ cd $SUBMISSION_PATH
 echo -e "y\ny\ny" > cm_answer.txt
 
 ../../../libIGCM/clean_month.job < cm_answer.txt
-check_line_execution
 
 rm -f cm_answer.txt
 
 $HPC_SUBMISSION_CMD $JOB_NAME
-check_line_execution
 
 
 #------------------------------------------------------------------
