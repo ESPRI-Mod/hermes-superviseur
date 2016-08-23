@@ -55,16 +55,16 @@ class JobSpecificText(object):
     """
     def __init__(self,
         job_status,
-        period="XXX",
-        periodDateBegin="XXX",
-        perdiodDateEnd="XXX",
+        period_id,
+        periodDateBegin,
+        perdiodDateEnd,
         periodNSubmission="X"
         ):
         """Instance constructor.
 
         """
         self.job_status = job_status
-        self.period = period
+        self.period_id = period_id
         self.periodDateBegin = periodDateBegin
         self.perdiodDateEnd = perdiodDateEnd
         if periodNSubmission=="1":
@@ -82,7 +82,7 @@ class JobSpecificText(object):
 
         """
         return _JOB_TEXT[self.job_status].format(
-            self.period,
+            self.period_id,
             self.periodDateBegin,
             self.perdiodDateEnd,
             self.periodNSubmission
@@ -100,7 +100,11 @@ def _get_email_attachment_name(params):
     """Returns the name of the email attachment to be sent to the user.
 
     """
-    return "supervision-{}-{}-{}-{}.txt".format(params.job_status, params.user.login, params.job.scheduler_id, params.simulation.compute_node_machine_raw)
+    return "supervision-{}-{}-{}-{}.txt".format(
+        params.job_status, 
+        params.user.login, 
+        params.job.scheduler_id, 
+        params.simulation.compute_node_machine_raw)
 
 
 def _get_email_subject(params):
@@ -121,7 +125,11 @@ def _get_email_body(params):
         params.user.login,
         params.job.scheduler_id,
         params.simulation.compute_node_machine_raw,
-        JobSpecificText(params.job_status),
+        JobSpecificText(
+            params.job_status,
+            params.job_period.period_id,
+            params.job_period.period_date_begin,
+            params.job_period.period_date_end),
         _get_email_attachment_name(params)
         )
 
@@ -142,12 +150,19 @@ class DispatchParameters(object):
     """Data required by the dispatcher.
 
     """
-    def __init__(self, simulation, job, supervision, user):
+    def __init__(
+        self, 
+        simulation, 
+        job,
+        job_period, 
+        supervision, 
+        user):
         """Instance constructor.
 
         """
         self.simulation = simulation
         self.job = job
+        self.job_period = job_period
         self.supervision = supervision
         self.user = user
         if job.is_error:
