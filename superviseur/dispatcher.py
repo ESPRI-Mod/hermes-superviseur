@@ -59,7 +59,7 @@ class JobSpecificText(object):
         period_id,
         periodDateBegin,
         perdiodDateEnd,
-        periodNSubmission="X"
+        periodNSubmission
         ):
         """Instance constructor.
 
@@ -83,8 +83,6 @@ class JobSpecificText(object):
         """Instance formatter.
 
         """
-        print "****************** Simu name *******************"
-        print self.simulation_name
         return _JOB_TEXT[self.job_status].format(
             self.simulation_name,
             self.period_id,
@@ -135,7 +133,9 @@ def _get_email_body(params):
             params.job_status,
             params.job_period.period_id,
             params.job_period.period_date_begin,
-            params.job_period.period_date_end),
+            params.job_period.period_date_end,
+            str(params.job_period_counter[1])
+            ),
         _get_email_attachment_name(params)
         )
 
@@ -161,6 +161,7 @@ class DispatchParameters(object):
         simulation, 
         job,
         job_period, 
+        job_period_counter,
         supervision, 
         user):
         """Instance constructor.
@@ -169,6 +170,7 @@ class DispatchParameters(object):
         self.simulation = simulation
         self.job = job
         self.job_period = job_period
+        self.job_period_counter = job_period_counter
         self.supervision = supervision
         self.user = user
         if job.is_error:
