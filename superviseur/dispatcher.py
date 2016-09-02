@@ -36,8 +36,8 @@ Regards,
 The Hermes Supervision Platform"""
 
 # Job state specific text.
-_JOB_TEXT_LATE = "The Hermes platform has detected that your compute job is late for the period {} ({}-{}) for the {} time."
-_JOB_TEXT_FAIL = "The Hermes platform has detected that your compute job has failed during the period {} ({}-{}) for the {} time."
+_JOB_TEXT_LATE = "The Hermes platform has detected that your compute job {} is late for the period {} ({}-{}) for the {} time."
+_JOB_TEXT_FAIL = "The Hermes platform has detected that your compute job {} has failed during the period {} ({}-{}) for the {} time."
 
 # Map of job states to text to be sent to user.
 _JOB_TEXT = {
@@ -54,6 +54,7 @@ class JobSpecificText(object):
 
     """
     def __init__(self,
+        simulation_name,
         job_status,
         period_id,
         periodDateBegin,
@@ -63,6 +64,7 @@ class JobSpecificText(object):
         """Instance constructor.
 
         """
+        self.simulation_name = simulation_name
         self.job_status = job_status
         self.period_id = period_id
         self.periodDateBegin = periodDateBegin
@@ -81,7 +83,10 @@ class JobSpecificText(object):
         """Instance formatter.
 
         """
+        print "****************** Simu name *******************"
+        print self.simulation_name
         return _JOB_TEXT[self.job_status].format(
+            self.simulation_name,
             self.period_id,
             self.periodDateBegin,
             self.perdiodDateEnd,
@@ -126,6 +131,7 @@ def _get_email_body(params):
         params.job.scheduler_id,
         params.simulation.compute_node_machine_raw,
         JobSpecificText(
+            params.simulation.name,
             params.job_status,
             params.job_period.period_id,
             params.job_period.period_date_begin,

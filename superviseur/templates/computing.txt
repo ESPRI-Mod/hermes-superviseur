@@ -8,7 +8,7 @@ cd $SUBMISSION_PATH
 
 echo -e "y\ny\ny" > cm_answer.txt
 
-../../../libIGCM/clean_month.job < cm_answer.txt
+../../../libIGCM/clean_PeriodLenght.job < cm_answer.txt
 
 rm -f cm_answer.txt
 
