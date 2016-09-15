@@ -18,7 +18,7 @@ from superviseur import constants
 
 
 # Operator email subject template.
-_EMAIL_SUBJECT = u"HERMES Supervision :: user login {}, job number {} on {} machine"
+_EMAIL_SUBJECT = u"HERMES Supervision :: user {}, job {} on {} machine"
 
 # Operator email body template.
 _EMAIL_BODY = u"""Dear Hermes platform user {},
