@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/ksh
 
 #**************************************************************
 # Author: Lola Falletti
@@ -13,24 +13,37 @@
 #
 #**************************************************************
 
-declare HPC_JOB_ID="{hpc_job_id}"
-declare HPC_MACHINE="{compute_node_machine}"
-declare HPC_SUBMISSION_CMD="{hpc_submission_cmd}"
-declare JOB_NAME="{job_name}"
-declare JOB_UID="{job_uid}"
-declare LOGIN="{user_login}"
-declare RETRIEVE_JOB_STATUS=`{retrieve_job_status}`
-declare SIMULATION_UID="{simulation_uid}"
-declare SUBMISSION_PATH="{submission_path}"
-declare USER_EMAIL="{user_email}"
+typeset HPC_JOB_ID="{hpc_job_id}"
+typeset HPC_MACHINE="{compute_node_machine}"
+typeset HPC_SUBMISSION_CMD="{hpc_submission_cmd}"
+typeset JOB_NAME="{job_name}"
+typeset JOB_UID="{job_uid}"
+typeset LOGIN="{user_login}"
+typeset RETRIEVE_JOB_STATUS=`{retrieve_job_status}`
+typeset SIMULATION_UID="{simulation_uid}"
+typeset SUBMISSION_PATH="{submission_path}"
+typeset USER_EMAIL="{user_email}"
 
+cd $SUBMISSION_PATH
+cd ../../../libIGCM
+typeset libIGCM=$( pwd )
 
+#--------------------------------------------------------------
+# First of all
+# 
+# Load libIGCM
+# Use IGCM_config_CommonConfiguration and config.card to 
+# define output log directory ($R_BUF_KSH) 
+#--------------------------------------------------------------
 
-function check_line_execution {
-    if [ $? != 0 ]; then
-        echo 'TODO'
-    fi
-}
+. ${libIGCM}/libIGCM_debug/libIGCM_debug.ksh
+. ${libIGCM}/libIGCM_card/libIGCM_card.ksh
+. ${libIGCM}/libIGCM_date/libIGCM_date.ksh
+. ${libIGCM}/libIGCM_sys/libIGCM_sys.ksh
+. ${libIGCM}/libIGCM_config/libIGCM_config.ksh
+
+IGCM_config_CommonConfiguration ${SUBMISSION_PATH}/config.card
+
 
 function HERMES_SendMail_JobStatus {
 
@@ -52,29 +65,8 @@ function HERMES_SendMail_JobStatus {
 
 }
 
-function HERMES_sendAMQP_JobStatus {
-    # To send the HPC job status to Hermes platform.
-    # $1 : simulation_uid
-    # $2 : job_uid
-    # $3 : retrieve_job_status
 
-    typeset mail_recipient encodedBody
-    mail_recipient="superviseur@ipsl.jussieu.fr"
-    # Job Status tag on server side
-    code=8001
-    # Usual AMQP message to route messages on server side
-    encodedBody=$( echo "{${1},${2},\"msgCode\":\"${code}\",\"msgUID\":
-                \"$(uuidgen)\",\"jobStatus\":\"${3}\",\"msgTimestamp\":
-                \"$( date +"%Y-%m-%dT%H:%M:%S.%N%z" )\"}" |  base64 -w 0 )
-    # send mail
-    echo ${encodedBody} | mailx -s "[LOLA AMQP CHANNEL]" ${mail_recipient}
-
-    # Allways all good for now.
-    return 0
-}
-
-
-
+{
 if [ -z $RETRIEVE_JOB_STATUS ]; then 
     echo 'The job is not running so we continue the supervision'
 elif [ $RETRIEVE_JOB_STATUS == "R" ]; then
@@ -82,14 +74,14 @@ elif [ $RETRIEVE_JOB_STATUS == "R" ]; then
     llcancel $HPC_JOB_ID
 elif [ $RETRIEVE_JOB_STATUS == "H" ]; then
     echo "The job has the status Hold, let the Computing Center do its work."
-    echo "TODO: new table in the database with the job status?"
-    HERMES_sendAMQP_JobStatus $SIMULATION_UID $JOB_UID $RETRIEVE_JOB_STATUS
     echo "Exit"
     return 2
 else
-    echo $RETRIEVE_JOB_STATUS
-    echo 'TODO: new table in the database with the job status?'
-    echo 'Mail to the user.'
+    echo `The job has the status $RETRIEVE_JOB_STATUS, mail sent to the user.`
     HERMES_SendMail_JobStatus $LOGIN $HPC_JOB_ID $HPC_MACHINE $RETRIEVE_JOB_STATUS $SUBMISSION_PATH $USER_EMAIL
+    echo "Exit"
     return 3
 fi
+} >> $R_BUF_KSH/Supervisor_Output_${config_UserChoices_JobName}.HPC_JOB_ID
+
+

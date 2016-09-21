@@ -108,11 +108,11 @@ def format_script(params):
     script = script.replace('{timestamp}', unicode(params.now))
     script = script.replace('{year}', unicode(params.now.year))
     script = script.replace('{job_name}', "Job_{}".format(params.simulation.name))
+    script = script.replace('{hpc_job_id}', params.job.scheduler_id)
     script = script.replace('{hpc_submission_cmd}', _hpc_submission(params))
     script = script.replace('{submission_path}', params.job.submission_path or u"UNKNOWN")
     if params.job.execution_end_date is None:
         script = script.replace('{compute_node_machine}', params.simulation.compute_node_machine_raw)
-        script = script.replace('{hpc_job_id}', params.job.scheduler_id)
         script = script.replace('{job_uid}', params.job.job_uid)
         script = script.replace('{retrieve_job_status}', _HPC_JOB_STATUS_COMMAND[params.simulation.compute_node_raw])
         script = script.replace('{simulation_uid}', params.job.simulation_uid)
