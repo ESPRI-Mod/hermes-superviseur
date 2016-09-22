@@ -18,7 +18,7 @@ from superviseur import constants
 
 
 # Operator email subject template.
-_EMAIL_SUBJECT = u"HERMES Supervision :: user {}, job {} on {} machine"
+_EMAIL_SUBJECT = u"HERMES-SUPERVISOR :: user {}, job {} on {} machine"
 
 # Operator email body template.
 _EMAIL_BODY = u"""Dear Hermes platform user {},
@@ -144,12 +144,14 @@ def _dispatch_email(params):
     """Dispatches an email to the user for the supervision of his jobs.
 
     """
-    mail.send_email(config.alerts.emailAddressFrom,
-                    params.user.email,
-                    _get_email_subject(params),
-                    _get_email_body(params),
-                    _get_email_attachment(params),
-                    _get_email_attachment_name(params))
+    mail.send_email(
+        config.alerts.emailAddressFrom,
+        params.user.email,
+        _get_email_subject(params),
+        _get_email_body(params),
+        _get_email_attachment(params),
+        _get_email_attachment_name(params)
+        )
 
 
 class DispatchParameters(object):

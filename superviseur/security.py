@@ -20,19 +20,19 @@ def authorize(login):
     """Verifies that the user has authorized supervision.
 
     """
-    # Retrieve user details.
+    # Retrieve hermes user details.
     user = get_user(login)
 
     # Exit if user not found.
     if not user:
-        raise UserWarning("user not found")
+        raise UserWarning("login not registered within hermes-user.json: {}".format(login))
 
     # Exit if user does not want to receive emails.
     if not user.email:
-        raise UserWarning("user does not want to receive emails")
+        raise UserWarning("user [{}] does not wish to receive emails".format(user))
 
     # Exit if user supervision level is insufficient.
     if user.supervisionLevel == constants.SUPERVISION_LEVEL_0:
-        raise UserWarning("user supervision level is insufficient")
+        raise UserWarning("user [{}] supervision level is insufficient".format(user))
 
     return user
