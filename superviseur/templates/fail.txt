@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/ksh
 
 #**************************************************************
 # Author: Lola Falletti
@@ -9,18 +9,34 @@
 #
 #**************************************************************
 #
-# ...
+# Format script for a fail job
+#
+#**************************************************************
 
 
-declare HPC_SUBMISSION_CMD="{hpc_submission_cmd}"
-declare JOB_NAME="{job_name}"
-declare SUBMISSION_PATH="{submission_path}"
+typeset HPC_JOB_ID="{hpc_job_id}"
+typeset HPC_SUBMISSION_CMD="{hpc_submission_cmd}"
+typeset JOB_NAME="{job_name}"
+typeset SUBMISSION_PATH="{submission_path}"
 
+cd $SUBMISSION_PATH
+cd ../../../libIGCM
+typeset libIGCM=$( pwd )
 
-function check_line_execution {
-	if [ $? != 0 ]; then
-		echo 'TODO'
-	fi
-}
+#--------------------------------------------------------------
+# First of all
+# 
+# Load libIGCM
+# Use IGCM_config_CommonConfiguration and config.card to 
+# define output log directory ($R_BUF_KSH) 
+#--------------------------------------------------------------
+
+. ${libIGCM}/libIGCM_debug/libIGCM_debug.ksh
+. ${libIGCM}/libIGCM_card/libIGCM_card.ksh
+. ${libIGCM}/libIGCM_date/libIGCM_date.ksh
+. ${libIGCM}/libIGCM_sys/libIGCM_sys.ksh
+. ${libIGCM}/libIGCM_config/libIGCM_config.ksh
+
+IGCM_config_CommonConfiguration ${SUBMISSION_PATH}/config.card
 
 

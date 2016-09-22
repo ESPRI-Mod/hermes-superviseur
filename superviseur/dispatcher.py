@@ -29,7 +29,8 @@ Something went wrong with your job number {} on {} machine.
 
 To fix it, please find in attachment a bash script generated automatically by the Hermes supervision platform. 
 You have to copy it in your $HOME and then do :
-source {}
+chmod u+x {}
+./{}
 
 Regards,
 
@@ -136,6 +137,7 @@ def _get_email_body(params):
             params.job_period.period_date_end,
             str(params.job_period_counter[1])
             ),
+        _get_email_attachment_name(params),
         _get_email_attachment_name(params)
         )
 

@@ -1,9 +1,9 @@
-#------------------------------------------------------------------
+#--------------------------------------------------------------
 # BEGIN : COMPUTING JOB
-# Code to be executed when a computing job fails
-#------------------------------------------------------------------
+# Code to be executed when a computing job fails or is late
+#--------------------------------------------------------------
 
-
+{
 cd $SUBMISSION_PATH
 
 echo -e "y\ny\ny" > cm_answer.txt
@@ -13,8 +13,13 @@ echo -e "y\ny\ny" > cm_answer.txt
 rm -f cm_answer.txt
 
 $HPC_SUBMISSION_CMD $JOB_NAME
+} >> $R_BUF_KSH/Supervisor_Output_${config_UserChoices_JobName}.$HPC_JOB_ID
 
-
-#------------------------------------------------------------------
+#--------------------------------------------------------------
 # END : COMPUTING JOB
-#------------------------------------------------------------------
+#--------------------------------------------------------------
+
+echo
+echo "HERMES Supervision --> Submission path : " $SUBMISSION_PATH
+echo "HERMES Supervision --> Output log file : " $R_BUF_KSH/Supervisor_Output_${config_UserChoices_JobName}.$HPC_JOB_ID
+echo
