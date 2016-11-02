@@ -15,6 +15,7 @@ import datetime
 import glob
 import os
 
+from prodiguer.cv.constants import JOB_TYPE_COMPUTING
 
 
 # 
@@ -60,11 +61,11 @@ def _get_template(params):
 
     if params.job.is_error:
         template = _templates['fail.txt']
-        if params.job.typeof == "computing":
+        if params.job.typeof == JOB_TYPE_COMPUTING:
             template += _templates['computing.txt']
     elif params.job.execution_end_date is None:
         template = _templates['late.txt']
-        if params.job.typeof == "computing":
+        if params.job.typeof == JOB_TYPE_COMPUTING:
             template += _templates['computing.txt']
     else:
         raise ValueError("Template not found")
