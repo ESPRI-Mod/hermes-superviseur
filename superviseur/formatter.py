@@ -52,6 +52,16 @@ def _hpc_submission(params):
         return "ccc_msub"
 
 
+def _hpc_cancel_job(params):
+    """Get the HPC machine name and return the corresponding submission job command.
+
+    """
+    if params.simulation.compute_node_raw == u"IDRIS":
+        return "llcancel"
+    if params.simulation.compute_node_raw == u"TGCC": #or "CCRT" ?
+        return "ccc_mdel"
+
+
 def _get_template(params):
     """Get the template file and replace the generic fields.
 
@@ -114,6 +124,7 @@ def format_script(params):
     script = script.replace('{submission_path}', params.job.submission_path or u"UNKNOWN")
     if params.job.execution_end_date is None:
         script = script.replace('{compute_node_machine}', params.simulation.compute_node_machine_raw)
+        script = script.replace('{hpc_cancel_cmd}', _hpc_cancel_job(params))
         script = script.replace('{job_uid}', params.job.job_uid)
         script = script.replace('{retrieve_job_status}', _HPC_JOB_STATUS_COMMAND[params.simulation.compute_node_raw])
         script = script.replace('{simulation_uid}', params.job.simulation_uid)

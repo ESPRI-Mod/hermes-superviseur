@@ -16,6 +16,7 @@
 typeset HPC_JOB_ID="{hpc_job_id}"
 typeset HPC_MACHINE="{compute_node_machine}"
 typeset HPC_SUBMISSION_CMD="{hpc_submission_cmd}"
+typeset HPC_CANCEL_CMD="{hpc_cancel_cmd}"
 typeset JOB_NAME="{job_name}"
 typeset JOB_UID="{job_uid}"
 typeset LOGIN="{user_login}"
@@ -71,7 +72,7 @@ if [ -z $RETRIEVE_JOB_STATUS ]; then
     echo 'The job is not running so we continue the supervision'
 elif [ $RETRIEVE_JOB_STATUS == "R" -o `echo $RETRIEVE_JOB_STATUS | awk '{ print $7 }'` == "RUN" ]; then
     echo 'The job is still running, we cancel it and we continue the supervision.'
-    llcancel $HPC_JOB_ID
+    $HPC_CANCEL_CMD $HPC_JOB_ID
 elif [ $RETRIEVE_JOB_STATUS == "H" -o `echo $RETRIEVE_JOB_STATUS | awk '{ print $10 }'` != "-" ]; then
     echo "The job has the status Hold, let the Computing Center do its work."
     echo "Exit"
