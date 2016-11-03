@@ -69,15 +69,18 @@ function HERMES_SendMail_JobStatus {
 {
 if [ -z $RETRIEVE_JOB_STATUS ]; then 
     echo 'The job is not running so we continue the supervision'
-elif [ $RETRIEVE_JOB_STATUS == "R" ]; then
+elif [ $RETRIEVE_JOB_STATUS == "R" -o `echo $RETRIEVE_JOB_STATUS | awk '{ print $7 }'` == "RUN" ]; then
     echo 'The job is still running, we cancel it and we continue the supervision.'
     llcancel $HPC_JOB_ID
-elif [ $RETRIEVE_JOB_STATUS == "H" ]; then
+elif [ $RETRIEVE_JOB_STATUS == "H" -o `echo $RETRIEVE_JOB_STATUS | awk '{ print $10 }'` != "-" ]; then
     echo "The job has the status Hold, let the Computing Center do its work."
     echo "Exit"
     return 2
 else
-    echo `The job has the status $RETRIEVE_JOB_STATUS, mail sent to the user.`
+    if [ $HPC_MACHINE == "TGCC" ]; then
+        typeset RETRIEVE_JOB_STATUS=`echo $RETRIEVE_JOB_STATUS | awk '{ print $7 }'`
+    fi
+    echo 'The job has the status' $RETRIEVE_JOB_STATUS', mail sent to the user.'
     HERMES_SendMail_JobStatus $LOGIN $HPC_JOB_ID $HPC_MACHINE $RETRIEVE_JOB_STATUS $SUBMISSION_PATH $USER_EMAIL
     echo "Exit"
     return 3

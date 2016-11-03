@@ -21,7 +21,7 @@ from prodiguer.cv.constants import JOB_TYPE_COMPUTING
 # 
 _HPC_JOB_STATUS_COMMAND = {
     "IDRIS": "llq -j $HPC_JOB_ID -f %st | sed -n 3p",
-    "TGCC": "UNKNOWN"
+    "TGCC": "ccc_mpp | grep $HPC_JOB_ID"
 }
 
 # Templates folder.
