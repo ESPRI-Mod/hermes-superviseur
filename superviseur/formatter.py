@@ -15,7 +15,7 @@ import datetime
 import glob
 import os
 
-from prodiguer.cv.constants import JOB_TYPE_COMPUTING
+from hermes.cv.constants import JOB_TYPE_COMPUTING
 
 
 # 

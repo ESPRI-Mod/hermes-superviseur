@@ -11,8 +11,8 @@
 
 
 """
-from prodiguer.utils import config
-from prodiguer.utils import mail
+from hermes.utils import config
+from hermes.utils import mail
 from superviseur import constants
 
 

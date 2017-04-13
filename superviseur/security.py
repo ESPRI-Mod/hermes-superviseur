@@ -12,7 +12,7 @@
 
 """
 from superviseur import constants
-from prodiguer.utils.security import get_user
+from hermes.utils.security import get_user
 
 
 
