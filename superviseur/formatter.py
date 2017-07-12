@@ -91,7 +91,6 @@ class FormatParameters(object):
         self,
         simulation,
         job,
-        job_period,
         supervision,
         user
         ):
@@ -100,7 +99,6 @@ class FormatParameters(object):
         """
         self.simulation = simulation
         self.job = job
-        self.job_period = job_period
         self.now = datetime.datetime.utcnow()
         self.supervision = supervision
         self.user = user

@@ -64,14 +64,13 @@ def _write_script(script, job):
     logger.log("Superviseur script written to --> {}".format(fpath))
 
 
-def _execute_formatter(simulation, job, job_period, supervision, user):
+def _execute_formatter(simulation, job, supervision, user):
     """Executes the superviseur formatter function.
 
     """
     params = superviseur.FormatParameters(
         simulation,
         job,
-        job_period,
         supervision,
         user
         )
@@ -99,7 +98,7 @@ def _main(args):
         _get_data(args.job_uid)
 
     # Dispatch script to HPC for execution.
-    _execute_formatter(simulation, job, job_period, supervision, user)
+    _execute_formatter(simulation, job, supervision, user)
 
 
 

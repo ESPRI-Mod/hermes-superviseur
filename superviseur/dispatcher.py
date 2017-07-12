@@ -55,29 +55,40 @@ class JobSpecificText(object):
 
     """
     def __init__(self,
-        simulation_name,
+        simulation,
         job_status,
-        period_id,
-        periodDateBegin,
-        perdiodDateEnd,
-        periodNSubmission
+        job_period,
+        job_period_counter
         ):
         """Instance constructor.
 
         """
-        self.simulation_name = simulation_name
+        self.simulation_name = simulation.name
         self.job_status = job_status
-        self.period_id = period_id
-        self.periodDateBegin = periodDateBegin
-        self.perdiodDateEnd = perdiodDateEnd
-        if periodNSubmission=="1":
-            self.periodNSubmission = periodNSubmission+"st"
-        elif periodNSubmission=="2":
-            self.periodNSubmission = periodNSubmission+"nd"
-        elif periodNSubmission=="3":
-            self.periodNSubmission = periodNSubmission+"rd"
+
+        if job_period is None:
+            self.period_id = 'N/A'
+            self.period_date_begin = simulation.execution_start_date
+            self.period_date_end = 'N/A'
         else:
-            self.periodNSubmission = periodNSubmission+"th"
+            self.period_id = job_period.period_id
+            self.period_date_begin = job_period.period_date_begin
+            self.period_date_end = job_period.period_date_end
+
+        try:
+            iter(job_period_counter)
+        except TypeError:
+            self.period_n_submission = 'N/A'
+        else:
+            counter = str(job_period_counter[1])
+            if counter == '1':
+                self.period_n_submission = '{}st'.format(counter)
+            elif counter == '2':
+                self.period_n_submission = '{}nd'.format(counter)
+            elif counter == '3':
+                self.period_n_submission = '{}rd'.format(counter)
+            else:
+                self.period_n_submission = '{}th'.format(counter)
 
 
     def __format__(self, format):
@@ -87,9 +98,9 @@ class JobSpecificText(object):
         return _JOB_TEXT[self.job_status].format(
             self.simulation_name,
             self.period_id,
-            self.periodDateBegin,
-            self.perdiodDateEnd,
-            self.periodNSubmission
+            self.period_date_begin,
+            self.period_date_end,
+            self.period_n_submission
             )
 
 
@@ -105,10 +116,11 @@ def _get_email_attachment_name(params):
 
     """
     return "supervision-{}-{}-{}-{}.txt".format(
-        params.job_status, 
-        params.user.login, 
-        params.job.scheduler_id, 
-        params.simulation.compute_node_machine_raw)
+        params.job_status,
+        params.user.login,
+        params.job.scheduler_id,
+        params.simulation.compute_node_machine_raw
+        )
 
 
 def _get_email_subject(params):
@@ -130,12 +142,10 @@ def _get_email_body(params):
         params.job.scheduler_id,
         params.simulation.compute_node_machine_raw,
         JobSpecificText(
-            params.simulation.name,
+            params.simulation,
             params.job_status,
-            params.job_period.period_id,
-            params.job_period.period_date_begin,
-            params.job_period.period_date_end,
-            str(params.job_period_counter[1])
+            params.job_period,
+            params.job_period_counter
             ),
         _get_email_attachment_name(params),
         _get_email_attachment_name(params)
@@ -161,13 +171,14 @@ class DispatchParameters(object):
 
     """
     def __init__(
-        self, 
-        simulation, 
+        self,
+        simulation,
         job,
-        job_period, 
+        job_period,
         job_period_counter,
-        supervision, 
-        user):
+        supervision,
+        user
+        ):
         """Instance constructor.
 
         """

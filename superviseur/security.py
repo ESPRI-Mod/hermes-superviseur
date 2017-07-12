@@ -33,6 +33,6 @@ def authorize(login):
 
     # Exit if user supervision level is insufficient.
     if user.supervisionLevel == constants.SUPERVISION_LEVEL_0:
-        raise UserWarning("user [{}] supervision level is insufficient".format(user))
+        raise UserWarning("user [{}] supervision level is insufficient".format(user.login))
 
     return user
