@@ -99,7 +99,7 @@ class FormatParameters(object):
         """
         self.simulation = simulation
         self.job = job
-        self.now = datetime.datetime.utcnow()
+        self.now = datetime.datetime.now()
         self.supervision = supervision
         self.user = user
 
